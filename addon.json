@@ -1,0 +1,10 @@
+{
+	"title": "MOTD Support",
+	"type":	"ServerContent",
+	"tags": [ ],
+	"ignore": [
+		"README.md",
+		"icon.jpg",
+		".git/*"
+	]
+}
