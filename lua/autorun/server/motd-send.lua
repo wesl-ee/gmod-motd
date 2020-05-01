@@ -38,13 +38,7 @@ a fix if you find any bugs!</p>
 ]]
 end
 
--- Pre-cache network strings
-hook.Add("Initialize", "MOTDStrings", function()
-	util.AddNetworkString("MOTD")
-end )
-
--- Trigger the MOTD client-side
-hook.Add("PlayerInitialSpawn", "SendMOTD", function(p)
+local function SendMOTD(p)
 	-- Read from cfg/motd.txt file
 	local data = file.Read("cfg/motd.txt", "GAME") or DefaultMOTD()
 
@@ -56,5 +50,18 @@ hook.Add("PlayerInitialSpawn", "SendMOTD", function(p)
 	net.WriteUInt(#data, 20)	-- Size of the file (< 1MiB 20 bits)
 	net.WriteData(data, #data)	-- File itself
 	net.Send(p)
+end
+
+-- Pre-cache network strings
+hook.Add("Initialize", "MOTDStrings", function()
+	util.AddNetworkString("MOTD")
 end )
 
+-- Trigger the MOTD client-side
+hook.Add("PlayerInitialSpawn", "SendMOTD", SendMOTD)
+
+hook.Add("PlayerSay", "MOTD", function(p, text)
+	if string.lower(text) == "/motd" || string.lower(text) == "!motd" then
+		SendMOTD(p)
+	end
+end )
