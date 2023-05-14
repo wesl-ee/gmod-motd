@@ -47,8 +47,7 @@ local function SendMOTD(p)
 
 	-- Stream MOTD file to the client via data
 	net.Start("MOTD")
-	net.WriteUInt(#data, 20)	-- Size of the file (< 1MiB 20 bits)
-	net.WriteData(data, #data)	-- File itself
+	net.WriteData(util.Compress(data))	-- File itself
 	net.Send(p)
 end
 
