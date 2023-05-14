@@ -53,13 +53,13 @@ local function DisplayMOTD(markup)
 	panel:SetVisible(true)
 end
 
-net.Receive("MOTD", function(l, p)
+net.Receive("MOTD", function(l)
 	-- Only respect server MOTD messages
 	if IsValid(p) then return end
 
 	-- Max MOTD size: 1 MiB (20 bits)
-	local datalen = net.ReadUInt(20)
-	local motdata = net.ReadData(datalen)
+	local motdata = net.ReadData(l / 8)
+	motdata = util.Decompress(motdata)
 
 	DisplayMOTD(motdata)
 end )
